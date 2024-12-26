@@ -18,11 +18,24 @@ jobs:
       # 針對這個 container 可以再設定它的環境變數
       # env:
     env:
-      MONGODB_CONNECTION_PROTOCOL: mongodb+srv
-      MONGODB_CLUSTER_ADDRESS: cluster0.xaugyzh.mongodb.net
-      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
-      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+      MONGODB_CONNECTION_PROTOCOL: mongodb
+      # 這裡的 address、username、password，都是取用自下方的 services container
+      # 這裡的 address 是下面的 service container 名稱
+      # 可以再到 docker hub 上面查看 mongo image的 yml 檔設定方式
+      MONGODB_CLUSTER_ADDRESS: mongodb
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: example
       PORT: 8080
+    # Services Container，可以使用指定的 image 來做想要的功能 
+    # (而上方的 container 不一定要設定，因為也可以再 runner[runs-on] 的作業系統上面跑 service container，因為本身就是個獨立的 image)
+    # 這裡模擬案例是，使用一個測試的 mongodb 確定可以連線與CRUD，而不會使用正式的資料庫，避免動到正式資料
+    services:
+      # 自訂 service 名稱
+      mongodb:
+        image: mongo
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example
     steps:
       - name: Get Code
         uses: actions/checkout@v3
