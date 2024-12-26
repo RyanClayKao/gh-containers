@@ -12,17 +12,20 @@ jobs:
     environment: testing
     runs-on: ubuntu-latest
     # 使用 docker container
-    container:
-      # 使用指定的 image以及版本
-      image: node:16
-      # 針對這個 container 可以再設定它的環境變數
-      # env:
+    # container:
+    #   # 使用指定的 image以及版本
+    #   image: node:16
+    #   # 針對這個 container 可以再設定它的環境變數
+    #   # env:
     env:
       MONGODB_CONNECTION_PROTOCOL: mongodb
       # 這裡的 address、username、password，都是取用自下方的 services container
       # 這裡的 address 是下面的 service container 名稱
       # 可以再到 docker hub 上面查看 mongo image的 yml 檔設定方式
-      MONGODB_CLUSTER_ADDRESS: mongodb
+      # MONGODB_CLUSTER_ADDRESS: mongodb
+      # 當這個 job是直接用 runner 去跑，而前面沒有使用 container，那麼就不會自動的網路對應設定，得要自己設
+      # 這裡是得要呼叫當前 runner 這台機器的 27017 port，去存取 service container 的 mongodb
+      MONGODB_CLUSTER_ADDRESS: 127.0.0.1:27017
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: example
       PORT: 8080
@@ -33,6 +36,10 @@ jobs:
       # 自訂 service 名稱
       mongodb:
         image: mongo
+        # 當這個 job是直接用 runner 去跑，而前面沒有使用 container，那麼就不會自動的網路對應設定，得要自己設
+        # 設定要開的 port，以及對應到 runner 的 port
+        port: 
+          - 27017:27017
         env:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: example
