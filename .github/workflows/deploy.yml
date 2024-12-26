@@ -11,6 +11,12 @@ jobs:
   test:
     environment: testing
     runs-on: ubuntu-latest
+    # 使用 docker container
+    container:
+      # 使用指定的 image以及版本
+      image: node:16
+      # 針對這個 container 可以再設定它的環境變數
+      # env:
     env:
       MONGODB_CONNECTION_PROTOCOL: mongodb+srv
       MONGODB_CLUSTER_ADDRESS: cluster0.xaugyzh.mongodb.net
