@@ -38,7 +38,7 @@ jobs:
         image: mongo
         # 當這個 job是直接用 runner 去跑，而前面沒有使用 container，那麼就不會自動的網路對應設定，得要自己設
         # 設定要開的 port，以及對應到 runner 的 port
-        port: 
+        ports: 
           - 27017:27017
         env:
           MONGO_INITDB_ROOT_USERNAME: root
